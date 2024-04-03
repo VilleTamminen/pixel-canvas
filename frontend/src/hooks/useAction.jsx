@@ -1,6 +1,10 @@
 import {useState,useEffect} from 'react';
 
 //ei muokattu, ei valmis
+/*Uncaught (in promise) ReferenceError: 
+can't access lexical declaration 'data' before initialization 
+useAction: 149 and 224
+*/
 const useAction = () => {
 	
 	const [state,setState] = useState({
@@ -27,7 +31,7 @@ const useAction = () => {
 			setState(state);
 			if(state.isLogged) {
 				//getList(state.token);
-                getSquareList("squares", state.token);
+                getSquareList(state.token);
 			}
 		}
 	},[])
@@ -139,14 +143,14 @@ const useAction = () => {
 							return tempState;
 						})
 						//getList(loginData.token);
-                        getSquareList("squares",loginData.token)
+                        getSquareList(loginData.token)
 						return;
 					case "logout":
 						clearState("");
 						return;
                     case "getSquareList":
                         const squareData = await response.json();
-						if(!data) {
+						if(!squareData) {
 							setError("Failed to get global canvas square data. Try again later!")
 							return;
 						}
@@ -158,13 +162,14 @@ const useAction = () => {
 							saveToStorage(tempState);
 							return tempState;
 						})
+                        console.log("squareData,"+squareData); //debugging
                         setError("Changed to global canvas");
 						return;
                     case "editGlobal":
-                        getSquareList("squares",);
+                        getSquareList();
                         return;
                     case "editPrivate":
-                        getSquareList("canvas",);
+                        getSquareList();
                         return;
                     case "addSquareGlobal":                      
 					default:
@@ -368,17 +373,14 @@ const useAction = () => {
         })
     }
 
-    const getSquareList = (urlplace, token) => {
+    const getSquareList = (token) => {
         //jos token on annettu, käytä sitä. muuten state.token käytössä
 		let tempToken = state.token;
 		if(token) {
 			tempToken = token;
 		}
-		let url = "/api/place";
-        //urlplace = private(canvas) tai global(squares) tällä hetkellä
-        if(urlplace) {
-			url = url + "/"+urlplace
-		}
+		//let url = "/api/place/squares";
+        let url = "/api/place";
 		setUrlRequest({
 			url:url,
 			request:{

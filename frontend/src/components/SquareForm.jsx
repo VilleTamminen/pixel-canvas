@@ -39,7 +39,6 @@ const SquareForm = (props) => {
             [event.target.datetime]:datetimenow
         }
         
-        //Error: props.addsquareGlobal is not a function
         props.addSquareGlobal(square);
         setState({
             username:"",
@@ -49,7 +48,7 @@ const SquareForm = (props) => {
             datetime:""
         })
     }
-        //<td> cannot appear as a child of <div>.
+
     return (
         <div style={{
             "backgroundColor":"pink",
