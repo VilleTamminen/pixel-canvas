@@ -7,13 +7,9 @@ let router = express.Router();
 
 //------------GLOBAL CANVAS STUFF--------------------------------------------------
 
-//Global canvas?
-router.get("/place/global",function(req,res) {
-	let query = {"user":req.session.user}
-	if(req.query.type) {
-		query.type = req.query.type
-	}
-	squareModel.find(query).then(function(squares) {
+router.get("/place",function(req,res) {
+   //Etsi kaikki squaret
+	squareModel.find().then(function(squares) {
 		return res.status(200).json(squares)
 	}).catch(function(err) {
 		console.log(err);
@@ -22,7 +18,7 @@ router.get("/place/global",function(req,res) {
 })
 
 //Global square edit
-router.put("/global/:id",function(req,res) {
+router.put("/place/:id",function(req,res) {
 	if(!req.body) {
 		return res.status(400).json({"Message":"Bad Request"})
 	}
@@ -31,7 +27,8 @@ router.put("/global/:id",function(req,res) {
 	}
     //ei tehdä uutta squareModelia.
 	let square = {
-		"username":req.session.user.username,
+        "id":req.body.id,
+		"username":req.session.user,
 		"color":req.body.color,
 		"coordX":req.body.coorX,
 		"coordY":req.body.coordY,
@@ -46,7 +43,7 @@ router.put("/global/:id",function(req,res) {
 })
 
 //----------PRIVATE CANVAS STUFF-------------------------------------------
-
+/*
 //private canvas ?
 router.get("/place",function(req,res) {
 	let query = {"user":req.session.user}
@@ -118,6 +115,6 @@ router.put("/place/:id",function(req,res) {
 		return res.status(500).json({"Message":"Internal server error"})
 	})
 })
-
+*/
 
 module.exports = router;

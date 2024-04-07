@@ -1,6 +1,8 @@
 import {useState} from 'react';
 import SquareForm from './SquareForm';
 import EditSquare from './EditSquare';
+import Square from './Square';
+
 
 //ei valmis
 const GlobalCanvas = (props) => {
@@ -62,18 +64,32 @@ const GlobalCanvas = (props) => {
 		changeMode("cancel");
 	}
 	
-    //Error: props.list is undefined
-	let squares = props.squareList.map((square,index) => {
+    //Squaret ovat sekaisin, ne täytyy saada id:n mukaan sommiteltua tai coordinaattien mukaan oikeisiin kohtiin?
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#sorting_with_map 
+    let squares = props.squareList.sort((a, b) => a.id > b.id );
+
+    //Square changeMode={changeMode} index={index}
+	squares = squares.map((square,index) => {
 		if(index === state.editIndex) {
 			return(
 				<EditSquare key={item._id} item={item} changeMode={changeMode} editSquare={editSquare}/>
 			)
 		}
 		return(
-			<Square key={square._id} square={square} changeMode={changeMode} index={index}/>
+			<Square key={square._id} square={square} />
 		)
 	})
+
+
+    //SBG ei voi olla <table> sisällä
 	return(
+	<div>
+        {squares}
+	</div>
+	)
+}
+
+/*
 	<div>
 		<table className="table table-striped">
 			<thead>
@@ -87,7 +103,6 @@ const GlobalCanvas = (props) => {
 			</tbody>
 		</table>
 	</div>
-	)
-}
+*/
 
 export default GlobalCanvas;
