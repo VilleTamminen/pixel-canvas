@@ -159,6 +159,7 @@ app.post("/logout",function(req,res) {
     })
 })
 
+
 //user täytyy olla logged in että voi käyttää mitään
 app.use("/api",isUserLogged,canvasRoute);
 

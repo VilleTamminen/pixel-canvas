@@ -1,5 +1,5 @@
 
-const Row = (props => {
+const Row = (props) => {
 
     return (
         <tr>
@@ -13,6 +13,6 @@ const Row = (props => {
         </tr>
     )
 
-})
+}
 
 export default Row;

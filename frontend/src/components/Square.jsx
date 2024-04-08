@@ -1,16 +1,16 @@
-//ei valmis
-//kopio Row.jsx
+import * as utilityConstants from './utilityConstants';
 
-const Square = (props => {
+//kopio Row.jsx
+const Square = (props) => {
     //SVG rectangle. tässä määritellään squaren koko.
     return (
-            <svg width="50" height="50">
-                <rect width="50" height="50"  fill={props.square.color} />
+            <svg width={utilityConstants.GlobalCanvasSquareSize} height={utilityConstants.GlobalCanvasSquareSize} >
+                <rect width={utilityConstants.GlobalCanvasSquareSize} height={utilityConstants.GlobalCanvasSquareSize}  fill={props.square.color} />
             </svg>
 
     )
 
-})
+}
 /*
         <tr>
             <td>{props.square.coordX}</td>

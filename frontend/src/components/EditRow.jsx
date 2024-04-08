@@ -1,6 +1,6 @@
 import { useState } from "react";
-//ei valmis
-const EditRow = (props => {
+
+const EditRow = (props) => {
 
     const [state,setState] = useState({
         "type":props.item.type,
@@ -55,6 +55,6 @@ const EditRow = (props => {
         </tr>
     )
 
-})
+}
 
 export default EditRow;

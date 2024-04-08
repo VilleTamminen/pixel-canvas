@@ -162,11 +162,13 @@ const useAction = () => {
 							saveToStorage(tempState);
 							return tempState;
 						})
-                        console.log("squareData,"+squareData); //debugging
                         setError("Changed to global canvas");
 						return;
                     case "editGlobal":
                         getSquareList();
+                        //editGlobalSquare();
+                        //Edit kutsutaan GlobalCanvas->EditSquare. Täällä ei tarvi tehdä mitään.
+                        setError("Global square edit success");
                         return;
                     case "editPrivate":
                         getSquareList();
@@ -343,36 +345,6 @@ const useAction = () => {
 
     // CANVAS STUFF
 
-    const editGlobalSquare = (square) => {
-        setUrlRequest({
-            url:"/api/place/squares/"+square._id,
-            request:{
-                "method":"PUT",
-                "headers":{
-                    "Content-type":"application/json",
-                    "token":state.token
-                },
-                "body":JSON.stringify(square)
-            },
-            action:"editGlobal"
-        })
-    }
-
-    const editPrivateSquare = (user,square) => {
-        setUrlRequest({
-            url:"/api/place/canvas/"+user._id +"/"+square._id,
-            request:{
-                "method":"PUT",
-                "headers":{
-                    "Content-type":"application/json",
-                    "token":state.token
-                },
-                "body":JSON.stringify(square)
-            },
-            action:"editPrivate"
-        })
-    }
-
     const getSquareList = (token) => {
         //jos token on annettu, käytä sitä. muuten state.token käytössä
 		let tempToken = state.token;
@@ -392,6 +364,22 @@ const useAction = () => {
 			action:"getSquareList"
 		})
 	}
+    
+    const editGlobalSquare = (square) => {
+        //Ei etsitä objekti _id:n kautta vaan squaren oman id:n avulla.
+        setUrlRequest({
+            url:"/api/place/"+square.id,
+            request:{
+                "method":"PUT",
+                "headers":{
+                    "Content-type":"application/json",
+                    "token":state.token
+                },
+                "body":JSON.stringify(square)
+            },
+            action:"editGlobal"
+        })
+    }
 
     //For filling canvas with squares
     const addSquareGlobal = (square) => {
@@ -408,6 +396,21 @@ const useAction = () => {
 			action:"addSquareGlobal"
 		})
 	}
+        
+    const editPrivateSquare = (user,square) => {
+        setUrlRequest({
+            url:"/api/place/canvas/"+user._id +"/"+square._id,
+            request:{
+                "method":"PUT",
+                "headers":{
+                    "Content-type":"application/json",
+                    "token":state.token
+                },
+                "body":JSON.stringify(square)
+            },
+            action:"editPrivate"
+        })
+    } 
     /*
     const privatecanvas = () => {
 		setUrlRequest({
