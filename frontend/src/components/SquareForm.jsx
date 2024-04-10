@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-//ei valmis
+//ei valmis, ei käytössä
 const SquareForm = (props) => {
 
     const [state,setState] = useState({

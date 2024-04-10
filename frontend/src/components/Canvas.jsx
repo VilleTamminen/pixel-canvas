@@ -2,7 +2,7 @@ import {useState} from 'react';
 import SquareForm from './SquareForm';
 import EditSquare from './EditSquare';
 
-//ei valmis. kopio globalcanvas.jsx. Local storage?
+//ei valmis. kopio globalcanvas.jsx. Local storage? ei käytössä
 //Private canvas
 const Canvas = (props) => {
 	

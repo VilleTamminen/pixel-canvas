@@ -12,12 +12,12 @@ const GlobalCanvas = (props) => {
 	const [state,setState] = useState({
 		editIndex:-1,
         square:{
-            "id":1,
-            "username":"",
-            "color":"",
-            "coordX":0,
-            "coordY":0,
-            "datetime":""
+            id:0,
+            username:"",
+            color:"",
+            coordX:0,
+            coordY:0,
+            datetime:""
         }
 	})
 
@@ -49,9 +49,10 @@ const GlobalCanvas = (props) => {
 	}
 
     //Edit Global square
-	const editSquare = (square) => {
-		props.editSquare(square);
-		changeMode("cancel");
+	const editSquare = (newSquare) => { 
+        console.log("global square final: "+newSquare.id+" "+newSquare.username+" "+newSquare.coordX+" "+newSquare.coordY+" "+newSquare.datetime);
+		props.editSquare(newSquare);
+		//changeMode("cancel");
 	}
 	
     //Squaret ovat sekaisin, ne täytyy saada id:n mukaan sommiteltua tai coordinaattien mukaan oikeisiin kohtiin?
@@ -60,7 +61,7 @@ const GlobalCanvas = (props) => {
 
 	squares = squares.map((square,index) => {
         //Lisää rivinvaihto 
-        //poiustettu Square changeMode={changeMode} index={index}
+        //poistettu Square changeMode={changeMode} index={index}
         if(square.id % utilityConstants.GlobalCanvasSquareRowSize === 0){
             return(
                 <>
@@ -74,76 +75,72 @@ const GlobalCanvas = (props) => {
 		)
 	})
 
-    let editSquares = props.squareList.map((square) => {
-        return  <EditSquare key={square._id} square={square} changeMode={changeMode} editSquare={editSquare}/>
-    })
-    
-    //Has to load DOM before we can access element ids.
-   // React.useEffect(() =>{
-        // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX 
-        // https://stackoverflow.com/questions/3234256/find-mouse-position-relative-to-element 
-         //document.addEventListener("mouseclick", mouseClick);
-
-        const mouseClick = (e) => {
-            console.log("Mouse click"); //debugging
-            // e = Mouse click event.
-            var rect = e.target.getBoundingClientRect();
-            if(!e.target){
-                rect = e.getBoundingClientRect();
+    // MOUSE CLICK EVENT FOR CLICKING SQUARES 
+    // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX 
+    // https://stackoverflow.com/questions/3234256/find-mouse-position-relative-to-element 
+    function roundX(x, roundingBase)
+    {
+        if(x % roundingBase == 0){
+            return x;
+        }
+        else{
+            //Math.ceil rounds up, so we decrease roundingBase at the end to get lowest value. Because coordinate origin is top-left corner.
+            //ONLY IF x IS NOT MULTIPLE OF roundingBase
+            //Eli jos x=487 ja roundingBase=50, return 450
+            return Math.ceil(x / roundingBase) * roundingBase - roundingBase;
+        }
+    }
+    function selectSquareWithId(squareId){
+        //Select square so that EditSquare can use it
+        //kun on saatu square niin EditSquare key={square._id} voidaan laittaa takaisin
+        let tempSquares = props.squareList.sort((a, b) => a.id > b.id );
+       // console.log("global canvas select square id: " +tempSquares[squareId-1].id + "  coordX: " +tempSquares[squareId-1].coordX) //debugging
+        setState((state) => {
+            return {
+                ...state,
+                square:tempSquares[squareId-1]
             }
-            var xInElement = e.clientX - rect.left; //x position within the element.
-            var yInElement = e.clientY - rect.top;  //y position within the element.
-            console.log("Left? : " + xInElement + " ; Top? : " + yInElement + ".");
-
+        })
+    }
+    function findSquareId(x,y){
+        //ensimmäisen ruudun koordinaatti on x:0 y:0, mutta id pitää olla yksi, joten x ja y saa +1
+        let squareX = (x / utilityConstants.GlobalCanvasSquareSize)+1; //rounded coordinate gives position in row 
+        let squareY = (y / utilityConstants.GlobalCanvasSquareSize)+1; //rounded coordinate gives column
+        // Kerro Y rivilukumäärällä, lisää X ja vähennä yksi rivilukumäärä.
+        let id = squareY * (utilityConstants.GlobalCanvasSquareRowSize) + squareX - utilityConstants.GlobalCanvasSquareRowSize;
+       // console.log("find square id: squareX "+squareX+", squareY "+squareY+",final id "+id); //debugging
+        return id;
+    }
+    const mouseClick = (e) => {
+        // e = Mouse click event.
+        let squareFieldDiv = e.currentTarget.getBoundingClientRect();
+        if(!e.currentTarget){
+            squareFieldDiv = e.getBoundingClientRect();
+            console.log("no e.currentTarget aka no SquareField"); //debugging
+        }    
+        let xInElement = e.clientX - squareFieldDiv.left; //x position within the SquareField div element.
+        let yInElement = e.clientY - squareFieldDiv.top;  //y position within the SquareField div element.
+        //Jos klikattiin ruutujen ohi niin ignore
+        if(xInElement > utilityConstants.GlobalCanvasSquareSize * utilityConstants.GlobalCanvasSquareRowSize){
+            console.log("You didn't click square.");
+        }
+        else {
+           // console.log("x: " + xInElement + "  y: " + yInElement + + " || clientX "+ e.clientX + " clientY: "+e.clientY+" || div.left: "+squareFieldDiv.left+ " div.top: "+squareFieldDiv.top ); //debugging
             //Do math to find corner coordinates of the square
             let x = roundX(xInElement, utilityConstants.GlobalCanvasSquareSize);
             let y = roundX(yInElement, utilityConstants.GlobalCanvasSquareSize);
-            findSquareId(x,y);
-            selectSquare(findSquareId(x,y));
-            // Client/Screen X coordinate is same. Y coordinate has about 80 in height difference. Screen includes top bar of tabs etc.
-           // console.log(`Screen X/Y: ${e.screenX}, ${e.screenY} Client X/Y: ${e.clientX}, ${e.clientY}`);
-        };
-        function findSquareId(x,y){
-            console.log("find square id"); //debugging
-            let squareX = x / utilityConstants.GlobalCanvasSquareSize;
-            let squareY = y / utilityConstants.GlobalCanvasSquareSize;
-            // Kerro Y rivilukumäärällä, lisää X ja vähennä yksi rivilukumäärä.
-            return squareY * (utilityConstants.GlobalCanvasSquareSize) + squareX - utilityConstants.GlobalCanvasSquareSize;
+           // console.log("after rounding x: "+ x + " y: " +y); //debugging
+            //Find square id and use it to set state square
+            selectSquareWithId(findSquareId(x,y)); 
         }
-        function selectSquare(selectedsquare){
-            //Select square so that EditSquare can use it
-            //kun on saatu square niin EditSquare key={square._id} voidaan laittaa takaisin
-            state.square = selectedsquare;
-
-        }
-        function roundX(x, roundingBase)
-        {
-            if(x % roundingBase == 0){
-                return x;
-            }
-            else{
-                //Math.ceil rounds up, so we decrease roundingBase at the end to get lowest value. Because coordinate origin is top-left corner.
-                //ONLY IF x IS NOT MULTIPLE OF roundingBase
-                //Eli jos x=487 ja roundingBase=50, return 450
-                return Math.ceil(x / roundingBase) * roundingBase - roundingBase;
-            }
-        }
-        document.addEventListener("mouseclick",mouseClick);
-        // document.getElementById('SquareField').addEventListener("mouseclick",mouseClick);
-        /*
-        function mouseMove(e) {
-            console.log(`Screen X/Y: ${e.screenX}, ${e.screenY} Client X/Y: ${e.clientX}, ${e.clientY}`);
-        }
-        document.addEventListener("mousemove",mouseMove); */
-
-   // }, [])  //React.useEffect end
+    };
 
     //SVG element ei voi olla <table> sisällä
     // EditSquare key={square._id}  square={square} changeMode={changeMode}
 	return(
         <>
-            <EditSquare changeMode={changeMode} editSquare={editSquare}/>
-            <div id='SquareField'>
+            <EditSquare key={state.square._id} square={state.square} changeMode={changeMode} editSquare={editSquare} />
+            <div id='SquareFieldDiv' onClick={mouseClick} >
                 {squares}
             </div>
         </>

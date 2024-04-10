@@ -29,8 +29,6 @@ router.get("/place/:id",function(req,res) {
 })
 
 //Global square edit. 
-// Square_1 _id: 660bab85f43835a5adba4633
-// Square_20 _id: 660bab85f43835a5adba4646
 router.put("/place/:id",function(req,res) {
 	if(!req.body) {
 		return res.status(400).json({"Message":"Bad Request. no body"})
@@ -42,7 +40,7 @@ router.put("/place/:id",function(req,res) {
     //"username":req.session.user,
 	let square = {
         "id":req.body.id,
-		"username":req.body.username,
+		"username":req.session.user,
 		"color":req.body.color,
 		"coordX":req.body.coordX,
 		"coordY":req.body.coordY,
