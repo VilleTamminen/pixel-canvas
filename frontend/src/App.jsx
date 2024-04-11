@@ -34,8 +34,8 @@ function App() {
 				</div>
 				<Routes>
 					<Route path="/" element={<HomePage />}/>
-                    <Route path="/form" element={<SquareForm addSquareGlobal={addSquareGlobal}/>}/>
                     <Route path="/global" element={<GlobalCanvas squareList={state.squareList} getSquareList={getSquareList} editSquare={editGlobalSquare} />}/>
+                    <Route path="/canvas" element={<Canvas addSquareGlobal={addSquareGlobal}/>}/>
 					<Route path="*" element={<Navigate to="/"/>}/>
 				</Routes>
 			</>

@@ -11,9 +11,6 @@ const NavBar = (props) => {
                         <Link to="/" className='nav-link'>Home page</Link>
                     </li>
                     <li className='nav-item' style={{marginLeft:10}}>
-                        <Link to="/form" className='nav-link'>shopping form</Link>
-                    </li>  
-                    <li className='nav-item' style={{marginLeft:10}}>
                         <Link to="/global" className='nav-link'>go to Global canvas</Link>
                     </li>       
                     <li className='nav-item' style={{marginLeft:10}}>

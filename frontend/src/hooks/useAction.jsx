@@ -166,9 +166,7 @@ const useAction = () => {
 						return;
                     case "editGlobal":
                         getSquareList();
-                        //editGlobalSquare();
                         //Edit kutsutaan GlobalCanvas->EditSquare. Täällä ei tarvi tehdä mitään.
-                        //setError("Global square edit success");
                         return;
                     case "editPrivate":
                         getSquareList();

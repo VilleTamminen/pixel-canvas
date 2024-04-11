@@ -8,3 +8,6 @@ export const GlobalCanvasSquareSize = 50;
 
 //Mistä kohtaa y-koordinaatit alkaa global squareille. EI KÄYTÖSSÄ ja saattaa muuttuakin myöhemmin.
 //export const GlobalCanvasHeightStart = 80;
+
+//Cooldown time for editing global canvas squares (seconds)
+export const GlobalCanvasCooldown = 5;

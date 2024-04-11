@@ -33,24 +33,29 @@ const EditSquare = (props) => {
     //Huom! alaviiva id poistettu molemmilla puolilla.
     //poistettu id:props.square.id
     const editSquare = (newcolor) => {
-        let tempSquare = state.square;
-        let currentdate = new Date(); 
-        let datetimenow = currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds();
-        console.log("datetime:"+datetimenow);         //datetime:Last Sync: 1/4/2024 @ 20:49:43 
-        tempSquare = {
-            ...state.square,
-            color:newcolor,
-            datetime:datetimenow
+        if(props.cooldownCounter === 0){
+            let tempSquare = state.square;
+            let currentdate = new Date(); 
+            let datetimenow = currentdate.getDate() + "/"
+                    + (currentdate.getMonth()+1)  + "/" 
+                    + currentdate.getFullYear() + " "  
+                    + currentdate.getHours() + ":"  
+                    + currentdate.getMinutes() + ":" 
+                    + currentdate.getSeconds();
+            console.log("datetime:"+datetimenow);         //datetime:Last Sync: 1/4/2024 @ 20:49:43 
+            tempSquare = {
+                ...state.square,
+                color:newcolor,
+                datetime:datetimenow
+            } 
+            setState({
+                square:tempSquare
+            })
+            props.editSquare(tempSquare);
         } 
-        setState({
-            square:tempSquare
-        })
-        props.editSquare(tempSquare);
+        else{
+            console.log("wait for cooldown counter to reach 0.")
+        } 
     }
 
     return (
@@ -58,16 +63,26 @@ const EditSquare = (props) => {
         <tr>Colored by user: {state.square.username}</tr> 
         <tr>Last edit: {state.square.datetime}</tr> 
         <tr>
-            <td><button className="btn btn-success" background-color="#04AA6D" style={{margin:"auto",textAlign:"center"}}
-                onClick={() => editSquare("#04AA6D")}>Green</button></td>
-            <td><button className="btn btn-success" background-color="#FF0000" style={{margin:"auto",textAlign:"center"}}
+            <td><button className="btn btn-success" background-color="#FF0000"
                 onClick={() => editSquare("#FF0000")}>Red</button></td>
-            <td><button className="btn btn-success" background-color="#0000FF" style={{margin:"auto",textAlign:"center"}}
-                onClick={() => editSquare("#0000FF")}>Blue</button></td>
-            <td><button className="btn btn-success" background-color="#FFFF00" style={{margin:"auto",textAlign:"center"}}
+            <td><button className="btn btn-success" background-color="#FFA500" 
+                onClick={() => editSquare("#FFA500")}>Orange</button></td>
+            <td><button className="btn btn-success" background-color="#FFFF00" 
                 onClick={() => editSquare("#FFFF00")}>Yellow</button></td>
+            <td><button className="btn btn-success" background-color="#04AA6D"
+                onClick={() => editSquare("#04AA6D")}>Green</button></td>
+            <td><button className="btn btn-success" background-color="#0000FF" 
+                onClick={() => editSquare("#0000FF")}>Blue</button></td>
+            <td><button className="btn btn-success" background-color="#A020F0" 
+                onClick={() => editSquare("#A020F0")}>Purple</button></td>
+            <td><button className="btn btn-success" background-color="#FFFFFF" 
+                onClick={() => editSquare("#FFFFFF")}>White</button></td>
+            <td><button className="btn btn-success" background-color="#808080" 
+                onClick={() => editSquare("#808080")}>Grey</button></td>
+            <td><button className="btn btn-success" background-color="#000000" 
+                onClick={() => editSquare("#000000")}>Black</button></td>
 
-            <td><button className="btn btn-danger" style={{margin:"auto",textAlign:"center"}}
+            <td><button className="btn btn-danger" 
                 onClick={ () => props.changeMode("cancel",0)}>Cancel</button></td>
         </tr>
         </>

@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react';
-import SquareForm from './SquareForm';
 import EditSquare from './EditSquare';
 import Square from './Square';
 import React from 'react';
@@ -8,7 +7,13 @@ import * as utilityConstants from './utilityConstants';
 //alustana ShoppingList
 const GlobalCanvas = (props) => {
 	
-    // edit mode = voi editoida yhtä pikseliä.
+    let squares;
+    var squareFieldDiv;
+
+    window.onload = function() {
+        squareFieldDiv = document.getElementById("SquareField"); //ei tarpeellinen
+    }
+
 	const [state,setState] = useState({
 		editIndex:-1,
         square:{
@@ -21,6 +26,12 @@ const GlobalCanvas = (props) => {
         }
 	})
 
+    //Counter for cooldown time of editing global squares
+    const [cooldownCounter, setCooldownCounter] = useState(utilityConstants.GlobalCanvasCooldown);
+    useEffect(() => {
+        cooldownCounter > 0 && setTimeout(() => setCooldownCounter(cooldownCounter - 1), 1000);
+    }, [cooldownCounter]);
+    
 	const onChange = (event) => {
         setState((state) => {
             return {
@@ -52,12 +63,17 @@ const GlobalCanvas = (props) => {
 	const editSquare = (newSquare) => { 
         console.log("global square final: "+newSquare.id+" "+newSquare.username+" "+newSquare.coordX+" "+newSquare.coordY+" "+newSquare.datetime);
 		props.editSquare(newSquare);
+        setCooldownCounter(utilityConstants.GlobalCanvasCooldown);
 		//changeMode("cancel");
 	}
-	
+	function reloadSquares(){
+        console.log("reload. getting new squares..."); //debugging
+        props.getSquareList();
+    }
+
     //Squaret ovat sekaisin, ne täytyy saada id:n mukaan sommiteltua tai coordinaattien mukaan oikeisiin kohtiin?
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#sorting_with_map 
-    let squares = props.squareList.sort((a, b) => a.id > b.id );
+    squares = props.squareList.sort((a, b) => a.id > b.id );
 
 	squares = squares.map((square,index) => {
         //Lisää rivinvaihto 
@@ -113,7 +129,7 @@ const GlobalCanvas = (props) => {
     }
     const mouseClick = (e) => {
         // e = Mouse click event.
-        let squareFieldDiv = e.currentTarget.getBoundingClientRect();
+        squareFieldDiv = e.currentTarget.getBoundingClientRect();
         if(!e.currentTarget){
             squareFieldDiv = e.getBoundingClientRect();
             console.log("no e.currentTarget aka no SquareField"); //debugging
@@ -139,7 +155,8 @@ const GlobalCanvas = (props) => {
     // EditSquare key={square._id}  square={square} changeMode={changeMode}
 	return(
         <>
-            <EditSquare key={state.square._id} square={state.square} changeMode={changeMode} editSquare={editSquare} />
+            <EditSquare key={state.square._id} square={state.square} cooldownCounter={cooldownCounter} changeMode={changeMode} editSquare={editSquare} />
+            <div>Cooldown: {cooldownCounter}</div>
             <div id='SquareFieldDiv' onClick={mouseClick} >
                 {squares}
             </div>
@@ -148,23 +165,5 @@ const GlobalCanvas = (props) => {
 
     
 }
-
-/*
-	<div>
-		<table className="table table-striped">
-			<thead>
-				<tr>
-					<th>User</th>
-					<th>Color</th>
-				</tr>
-			</thead>
-			<tbody>
-			{squares}
-			</tbody>
-		</table>
-	</div>
-*/
-
-
 
 export default GlobalCanvas;
