@@ -63,72 +63,28 @@ const EditSquare = (props) => {
         <tr>Colored by user: {state.square.username}</tr> 
         <tr>Last edit: {state.square.datetime}</tr> 
         <tr>
-            <td><button className="btn btn-success" background-color="#FF0000"
+            <td><button className="btn btn-success" background-color="#FF0000" style={{marginLeft:10}}
                 onClick={() => editSquare("#FF0000")}>Red</button></td>
-            <td><button className="btn btn-success" background-color="#FFA500" 
+            <td><button className="btn btn-success" background-color="#FFA500" style={{marginLeft:10}}
                 onClick={() => editSquare("#FFA500")}>Orange</button></td>
-            <td><button className="btn btn-success" background-color="#FFFF00" 
+            <td><button className="btn btn-success" background-color="#FFFF00" style={{marginLeft:10}}
                 onClick={() => editSquare("#FFFF00")}>Yellow</button></td>
-            <td><button className="btn btn-success" background-color="#04AA6D"
+            <td><button className="btn btn-success" background-color="#04AA6D" style={{marginLeft:10}}
                 onClick={() => editSquare("#04AA6D")}>Green</button></td>
-            <td><button className="btn btn-success" background-color="#0000FF" 
+            <td><button className="btn btn-success" background-color="#0000FF" style={{marginLeft:10}}
                 onClick={() => editSquare("#0000FF")}>Blue</button></td>
-            <td><button className="btn btn-success" background-color="#A020F0" 
+            <td><button className="btn btn-success" background-color="#A020F0" style={{marginLeft:10}}
                 onClick={() => editSquare("#A020F0")}>Purple</button></td>
-            <td><button className="btn btn-success" background-color="#FFFFFF" 
+            <td><button className="btn btn-success" background-color="#FFFFFF" style={{marginLeft:10}}
                 onClick={() => editSquare("#FFFFFF")}>White</button></td>
-            <td><button className="btn btn-success" background-color="#808080" 
+            <td><button className="btn btn-success" background-color="#808080" style={{marginLeft:10}}
                 onClick={() => editSquare("#808080")}>Grey</button></td>
-            <td><button className="btn btn-success" background-color="#000000" 
+            <td><button className="btn btn-success" background-color="#000000" style={{marginLeft:10}}
                 onClick={() => editSquare("#000000")}>Black</button></td>
-
-            <td><button className="btn btn-danger" 
-                onClick={ () => props.changeMode("cancel",0)}>Cancel</button></td>
         </tr>
         </>
     )
 
 }
-
-/*
- <td><input type="text"
-                    name="id"
-                    id="id"
-                    className="form-control"
-                    onChange={onChange}
-                    />id</td>
-            <td><input type="text"
-                    name="username"
-                    id="username"
-                    className="form-control"
-                    onChange={onChange}
-                    />username</td>
-           <td><input type="text"
-                    name="color"
-                    id="color"
-                    className="form-control"
-                    onChange={onChange}
-                    />color</td>
-            <td><input type="number"
-                    name="coordX"
-                    id="coordX"
-                    className="form-control"
-                    onChange={onChange}
-                    />coordX</td>
-            <td><input type="number"
-                    name="coordY"
-                    id="coordY"
-                    className="form-control"
-                    onChange={onChange}
-                    />coordY</td>
-             <td><input type="date"
-                    name="datetime"
-                    id="datetime"
-                    className="form-control"
-                    onChange={onChange}
-                    />datetime</td>
-            <br/>
-*/
-
 
 export default EditSquare;

@@ -1,12 +1,10 @@
 import useAction from "./hooks/useAction";
-//import ShoppingForm from "./components/ShoppingForm";
-//import ShoppingList from "./components/ShoppingList";
 import Navbar from "./components/Navbar";
 import LoginPage from "./components/LoginPage";
 import {Routes,Route,Navigate} from 'react-router-dom';
 import GlobalCanvas from  "./components/GlobalCanvas";
+import Canvas from  "./components/Canvas";
 import HomePage from "./components/HomePage";
-import SquareForm from "./components/SquareForm";
 
 //Kopio react/50_shopping_app/02_stage_login
 //frontend: npm install react
@@ -15,7 +13,7 @@ import SquareForm from "./components/SquareForm";
 function App() {
 
 	//const {state,addItem,removeItem,editItem,register,login,logout,setError,getList} = useAction();
-    const {state,addItem,removeItem,editItem,register,login,logout,setError,getList,    getSquareList,addSquareGlobal,editGlobalSquare,editPrivateSquare} = useAction();
+    const {state,register,login,logout,setError,    getSquareList,editGlobalSquare,editPrivateSquare} = useAction();
 
 	let message = <></>
 	if(state.loading) {
@@ -35,7 +33,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<HomePage />}/>
                     <Route path="/global" element={<GlobalCanvas squareList={state.squareList} getSquareList={getSquareList} editSquare={editGlobalSquare} />}/>
-                    <Route path="/canvas" element={<Canvas addSquareGlobal={addSquareGlobal}/>}/>
+                    <Route path="/canvas" element={<Canvas />}/>
 					<Route path="*" element={<Navigate to="/"/>}/>
 				</Routes>
 			</>

@@ -1,38 +1,68 @@
 import {useState, useEffect} from 'react';
 import EditSquare from './EditSquare';
-import Square from './Square';
+import PrivateSquare from './PrivateSquare';
 import React from 'react';
 import * as utilityConstants from './utilityConstants';
 
 // localStorage: https://github.com/Wantonius/OKKS2024K/tree/main/javascript/06_web_storage/public 
-//Private canvas
+//Private canvas. Because this local storage, if another user uses same computer they can see same storage.
 const Canvas = (props) => {
-    let squares;
-    var squareFieldDiv;
+
+    let starterSquares = '[{"id":1,"color":"#00ff55"},{"id":2,"color":"#808080"},{"id":3,"color":"#c2c2c2"},{"id":4,"color":"#808080"},{"id":5,"color":"#c2c2c2"},{"id":6,"color":"#808080"},{"id":7,"color":"#c2c2c2"},{"id":8,"color":"#808080"},{"id":9,"color":"#c2c2c2"},{"id":10,"color":"#00ff55"}]';
+    let privateSquares; //used to map react components
+    let privateSquaresList; //used to store square info to local storage
 
     window.onload = function() {
-        squareFieldDiv = document.getElementById("SquareField"); //ei tarpeellinen
-        if(localStorage.getItem("privateSquares")) {
-            let privateSquares = localStorage.getItem("privateSquares");
-            const local = document.getElementById("local");
-            local.textContent = "In local storage:"+privateSquares
+        console.log("windows onload"); //debugging
+        if(privateSquares){
+            console.log("privateSquares is not empty")
+            getLocalStorage();
+        }
+        else{
+            console.log("privateSquares is empty")
+            getLocalStorage();
         }
     }
-    function storeToLocalStorage() {
-        localStorage.setItem("privateSquares",document.getElementById("privateSquares").value);
+    function getLocalStorage(){
+        //squaret täytyy hakea vain kun sivu latautuu
+        if(localStorage.getItem("privateSquares")) {
+            privateSquaresList = JSON.parse(localStorage.getItem("privateSquares"));
+            setState({
+				list:privateSquaresList
+			})
+            CreateGrid();
+        }
+        else{
+            console.log("nothing in local storage")
+            createCanvas();
+        }
     }
+
+    function storeToLocalStorage() {
+        if(privateSquaresList){
+            localStorage.setItem("privateSquares",JSON.stringify(privateSquaresList)); //Uncaught TypeError: cyclic object value
+        }
+        else{
+            console.log("privateSquaresList is empty. Can't save them to local storage."); //debugging
+        }
+    }
+
 	const [state,setState] = useState({
-		editIndex:-1,
+        test:0,
+        selectedSquareId:1,
         square:{
             id:0,
-            username:"",
-            color:"",
-            coordX:0,
-            coordY:0,
-            datetime:""
-        }
+            color:"#FFFFFF"
+        },
+        list:[]
 	})
-  
+    useEffect(() => {
+        //window.onload ei toimi, siksi useEffect()
+        if(!privateSquaresList){
+            getLocalStorage();
+        }
+    }, []);
+
 	const onChange = (event) => {
         setState((state) => {
             return {
@@ -41,49 +71,132 @@ const Canvas = (props) => {
             }
         })
 	}
-	
-	const changeMode = (mode,index) => {
-		if(mode === "cancel") {
-			setState({
-				editIndex:-1
-			})
-		}
-		if(mode === "edit") {
-			setState({
-				editIndex:index
-			})
-		}
-        else{
+
+    const editSquare = (newcolor) => {
+        if(state.selectedSquareId){
+            let id = state.selectedSquareId;
+            //getPrivateSquareList();
+            if(localStorage.getItem("privateSquares")) {
+                privateSquaresList = JSON.parse(localStorage.getItem("privateSquares"));
+                setState({
+                    list:privateSquaresList
+                })
+            }
+            console.log("edit: "+privateSquaresList[id-1].id + " - "+privateSquaresList[id-1].color + " to " +newcolor);
+            //index starts at 0 so we decrease by one
+            privateSquaresList[id-1] = {id:id,color:newcolor};
+            storeToLocalStorage();
+
+            //Map the squares again to show changes
+            privateSquares = privateSquaresList.map((square) => {
+                if(square.id % utilityConstants.PrivateCanvasSquareRowSize === 0){
+                    return(
+                        <>
+                            <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
+                            <br/>
+                        </>
+                    )
+                }
+                return(
+                    <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
+                )
+            })
             setState({
-				editIndex:-1
-			})
+                list:privateSquaresList
+            })
         }
-	}
+        else{
+            console.log("select a square");
+        }
+    }
 
-    //Edit Global square
-	const editSquare = (newSquare) => { 
-		props.editSquare(newSquare);
-	}
-
-    //Squaret ovat sekaisin, ne täytyy saada id:n mukaan sommiteltua tai coordinaattien mukaan oikeisiin kohtiin?
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#sorting_with_map 
-    squares = props.squareList.sort((a, b) => a.id > b.id );
-
-	squares = squares.map((square,index) => {
-        //Lisää rivinvaihto 
-        //poistettu Square changeMode={changeMode} index={index}
-        if(square.id % utilityConstants.GlobalCanvasSquareRowSize === 0){
+    function createCanvas(){
+        console.log("create canvas"); //debugging
+        let message = "";
+        let squareMax = utilityConstants.PrivateCanvasSquareRowSize * utilityConstants.PrivateCanvasSquareRowSize; //total number of squares
+        for(let i=1;i<=squareMax;i++){
+           message = message + JSON.stringify({id:i,color:'#bfbfbf'}); //light grey color
+           if(i !== squareMax){  message = message + ","} //don't include comma at the very end
+        } 
+        privateSquaresList = JSON.parse("["+message+"]");
+        storeToLocalStorage();
+        CreateGrid();
+    }
+    function CreateGrid(){
+        console.log("create grid"); //debugging
+       // getPrivateSquareList();
+       if(localStorage.getItem("privateSquares")) {
+            privateSquaresList = JSON.parse(localStorage.getItem("privateSquares"));
+            setState({
+                list:privateSquaresList
+            })
+        }
+        privateSquaresList.sort((a, b) => a.id > b.id );
+        privateSquares = privateSquaresList.map((square) => {
+            //Lisää rivinvaihto 
+            if(square.id % utilityConstants.PrivateCanvasSquareRowSize === 0){
+                return(
+                    <>
+                        <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
+                        <br/>
+                    </>
+                )
+            }
             return(
-                <>
-                    <Square key={square._id} square={square} />
-                    <br/>
-                </>
+                <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
             )
+	    })
+        setState({
+            list:privateSquaresList
+        })
+    }
+
+    const clearCanvas = () => {
+        //Turn all squares to white/grey
+        createCanvas();
+    }
+
+    if(!privateSquaresList){
+        if(localStorage.getItem("privateSquares")) {
+            privateSquaresList = JSON.parse(localStorage.getItem("privateSquares"));
+
+            privateSquaresList.sort((a, b) => a.id > b.id );
+            privateSquares = privateSquaresList.map((square) => {
+                //Lisää rivinvaihto 
+                if(square.id % utilityConstants.PrivateCanvasSquareRowSize === 0){
+                    return(
+                        <>
+                            <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
+                            <br/>
+                        </>
+                    )
+                }
+                return(
+                    <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
+                )
+            })
         }
-		return(
-			<Square key={square._id} square={square} />
-		)
-	})
+        else{
+            createCanvas();
+        }
+    }
+    else{
+        privateSquaresList.sort((a, b) => a.id > b.id );
+        privateSquares = privateSquaresList.map((square) => {
+            //Lisää rivinvaihto 
+            if(square.id % utilityConstants.PrivateCanvasSquareRowSize === 0){
+                return(
+                    <>
+                        <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
+                        <br/>
+                    </>
+                )
+            }
+            return(
+                <PrivateSquare key={square.id} id={"square"+square.id} square={square} />
+            )
+        })
+    }
 
     // MOUSE CLICK EVENT FOR CLICKING SQUARES 
     // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX 
@@ -100,30 +213,20 @@ const Canvas = (props) => {
             return Math.ceil(x / roundingBase) * roundingBase - roundingBase;
         }
     }
-    function selectSquareWithId(squareId){
-        //Select square so that EditSquare can use it
-        //kun on saatu square niin EditSquare key={square._id} voidaan laittaa takaisin
-        let tempSquares = props.squareList.sort((a, b) => a.id > b.id );
-       // console.log("global canvas select square id: " +tempSquares[squareId-1].id + "  coordX: " +tempSquares[squareId-1].coordX) //debugging
-        setState((state) => {
-            return {
-                ...state,
-                square:tempSquares[squareId-1]
-            }
-        })
-    }
+
     function findSquareId(x,y){
         //ensimmäisen ruudun koordinaatti on x:0 y:0, mutta id pitää olla yksi, joten x ja y saa +1
-        let squareX = (x / utilityConstants.GlobalCanvasSquareSize)+1; //rounded coordinate gives position in row 
-        let squareY = (y / utilityConstants.GlobalCanvasSquareSize)+1; //rounded coordinate gives column
+        let squareX = (x / utilityConstants.PrivateCanvasSquareSize)+1; //rounded coordinate gives position in row 
+        let squareY = (y / utilityConstants.PrivateCanvasSquareSize)+1; //rounded coordinate gives column
         // Kerro Y rivilukumäärällä, lisää X ja vähennä yksi rivilukumäärä.
-        let id = squareY * (utilityConstants.GlobalCanvasSquareRowSize) + squareX - utilityConstants.GlobalCanvasSquareRowSize;
+        let id = squareY * (utilityConstants.PrivateCanvasSquareRowSize) + squareX - utilityConstants.PrivateCanvasSquareRowSize;
        // console.log("find square id: squareX "+squareX+", squareY "+squareY+",final id "+id); //debugging
+       console.log("found square id: "+id);
         return id;
     }
     const mouseClick = (e) => {
         // e = Mouse click event.
-        squareFieldDiv = e.currentTarget.getBoundingClientRect();
+        let squareFieldDiv = e.currentTarget.getBoundingClientRect();
         if(!e.currentTarget){
             squareFieldDiv = e.getBoundingClientRect();
             console.log("no e.currentTarget aka no SquareField"); //debugging
@@ -131,28 +234,51 @@ const Canvas = (props) => {
         let xInElement = e.clientX - squareFieldDiv.left; //x position within the SquareField div element.
         let yInElement = e.clientY - squareFieldDiv.top;  //y position within the SquareField div element.
         //Jos klikattiin ruutujen ohi niin ignore
-        if(xInElement > utilityConstants.GlobalCanvasSquareSize * utilityConstants.GlobalCanvasSquareRowSize){
+        if(xInElement > utilityConstants.PrivateCanvasSquareSize * utilityConstants.PrivateCanvasSquareRowSize){
             console.log("You didn't click square.");
         }
         else {
-           // console.log("x: " + xInElement + "  y: " + yInElement + + " || clientX "+ e.clientX + " clientY: "+e.clientY+" || div.left: "+squareFieldDiv.left+ " div.top: "+squareFieldDiv.top ); //debugging
-            //Do math to find corner coordinates of the square
-            let x = roundX(xInElement, utilityConstants.GlobalCanvasSquareSize);
-            let y = roundX(yInElement, utilityConstants.GlobalCanvasSquareSize);
-           // console.log("after rounding x: "+ x + " y: " +y); //debugging
-            //Find square id and use it to set state square
-            selectSquareWithId(findSquareId(x,y)); 
+             //Do math to find corner coordinates of the square
+            let x = roundX(xInElement, utilityConstants.PrivateCanvasSquareSize);
+            let y = roundX(yInElement, utilityConstants.PrivateCanvasSquareSize);
+            setState({
+                selectedSquareId:findSquareId(x,y)
+            }) 
         }
     };
 
-    //SVG element ei voi olla <table> sisällä
-    // EditSquare key={square._id}  square={square} changeMode={changeMode}
+    /* target is the element that triggered the event (e.g., the user clicked on)
+    currentTarget is the element that the event listener is attached to   */
 	return(
         <>
-            <EditSquare key={state.square._id} square={state.square} editSquare={editSquare} />
-            <div id='SquareFieldDiv' onClick={mouseClick} >
-                {squares}
-            </div>
+        <tr>Selected square id: {state.selectedSquareId}</tr>
+        <tr>
+            <td><button className="btn btn-success" background-color="#FF0000" style={{marginLeft:10}}
+                onClick={() => editSquare("#FF0000")}>Red</button></td>
+            <td><button className="btn btn-success" background-color="#FFA500" style={{marginLeft:10}}
+                onClick={() => editSquare("#FFA500")}>Orange</button></td>
+            <td><button className="btn btn-success" background-color="#FFFF00" style={{marginLeft:10}}
+                onClick={() => editSquare("#FFFF00")}>Yellow</button></td>
+            <td><button className="btn btn-success" background-color="#04AA6D" style={{marginLeft:10}}
+                onClick={() => editSquare("#04AA6D")}>Green</button></td>
+            <td><button className="btn btn-success" background-color="#0000FF" style={{marginLeft:10}}
+                onClick={() => editSquare("#0000FF")}>Blue</button></td>
+            <td><button className="btn btn-success" background-color="#A020F0" style={{marginLeft:10}}
+                onClick={() => editSquare("#A020F0")}>Purple</button></td>
+            <td><button className="btn btn-success" background-color="#FFFFFF" style={{marginLeft:10}}
+                onClick={() => editSquare("#FFFFFF")}>White</button></td>
+            <td><button className="btn btn-success" background-color="#808080" style={{marginLeft:10}}
+                onClick={() => editSquare("#808080")}>Grey</button></td>
+            <td><button className="btn btn-success" background-color="#000000" style={{marginLeft:10}}
+                onClick={() => editSquare("#000000")}>Black</button></td>
+        </tr>
+        <tr>
+        <td><button className="btn btn-success" background-color="#FF0000" style={{marginLeft:10}}
+                onClick={() => createCanvas()}>Clear the canvas</button></td>
+        </tr>
+        <div id="SquareField" onClick={mouseClick}>
+            {privateSquares}
+        </div>
         </>
 	)
 }

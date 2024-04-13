@@ -1,10 +1,5 @@
 import {useState,useEffect} from 'react';
 
-//ei muokattu, ei valmis
-/*Uncaught (in promise) ReferenceError: 
-can't access lexical declaration 'data' before initialization 
-useAction: 149 and 224
-*/
 const useAction = () => {
 	
 	const [state,setState] = useState({
@@ -104,26 +99,6 @@ const useAction = () => {
 			}
 			if(response.ok) {
 				switch(urlRequest.action) {
-					case "getlist":
-						const data = await response.json();
-						if(!data) {
-							setError("Failed to parse shopping information. Try again later!")
-							return;
-						}
-						setState((state) => {
-							let tempState = {
-								...state,
-								list:data
-							}
-							saveToStorage(tempState);
-							return tempState;
-						})
-						return;
-					case "add":
-					case "remove":
-					case "edit":
-						getList();
-						return;
 					case "register":
 						setError("Register success");
 						return
@@ -169,9 +144,8 @@ const useAction = () => {
                         //Edit kutsutaan GlobalCanvas->EditSquare. Täällä ei tarvi tehdä mitään.
                         return;
                     case "editPrivate":
-                        getSquareList();
-                        return;
-                    case "addSquareGlobal":                      
+                        setError("private canvas");
+                        return;                      
 					default:
 						return;
 				}
@@ -193,18 +167,6 @@ const useAction = () => {
 					case "login":
 						setError("Login failed."+errorMessage);
 						return;
-					case "getlist":
-						setError("Failed to fetch shopping information."+errorMessage);
-						return;                  
-					case "add":
-						setError("Failed to add new item."+errorMessage);
-						return;
-					case "remove":
-						setError("Failed to remove item."+errorMessage);
-						return; 
-					case "edit":
-						setError("Failed to edit item."+errorMessage);
-						return;
 					case "logout":
 						clearState("Server responded with an error. Logging you out.");
 						return;
@@ -217,9 +179,6 @@ const useAction = () => {
                     case "editPrivate":
                         setError("Failed to edit private canvas."+errorMessage);
                         return;
-                    case "addSquareGlobal":
-                        setError("Failed to add square to global canvas."+errorMessage);
-                        return;
 					default:
 						return;
 				}
@@ -229,73 +188,6 @@ const useAction = () => {
 		fetchData();
 		
 	}, [urlRequest]);
-
-	//Shopping REST API
-    
-	const getList = (token,search) => {
-        //jos token on annettu, käytä sitä. muuten state.token käytössä
-		let tempToken = state.token;
-		if(token) {
-			tempToken = token;
-		}
-		let url = "/api/shopping"
-		if(search) {
-			url = url + "?type="+search
-		}
-		setUrlRequest({
-			url:url,
-			request:{
-				"method":"GET",
-				"headers":{
-					"token":tempToken
-				}
-			},
-			action:"getlist"
-		})
-	}
-
-	const addItem = (item) => {
-		setUrlRequest({
-			url:"/api/shopping",
-			request:{
-				"method":"POST",
-				"headers":{
-					"Content-type":"application/json",
-					"token":state.token
-				},
-				"body":JSON.stringify(item)
-			},
-			action:"add"
-		})
-	}
-	
-	const removeItem = (id) => {
-		setUrlRequest({
-			url:"/api/shopping/"+id,
-			request:{
-				"method":"DELETE",
-				"headers":{
-					"token":state.token
-				}
-			},
-			action:"remove"
-		})
-	}
-
-	const editItem = (item) => {
-		setUrlRequest({
-			url:"/api/shopping/"+item._id,
-			request:{
-				"method":"PUT",
-				"headers":{
-					"Content-type":"application/json",
-					"token":state.token
-				},
-				"body":JSON.stringify(item)
-			},
-			action:"edit"
-		})
-	} 
 	
 	//LOGIN API
 	
@@ -378,22 +270,6 @@ const useAction = () => {
             action:"editGlobal"
         })
     }
-
-    //For filling canvas with squares
-    const addSquareGlobal = (square) => {
-		setUrlRequest({
-			url:"/api/place/squares",
-			request:{
-				"method":"POST",
-				"headers":{
-					"Content-type":"application/json",
-					"token":state.token
-				},
-				"body":JSON.stringify(square)
-			},
-			action:"addSquareGlobal"
-		})
-	}
         
     const editPrivateSquare = (user,square) => {
         setUrlRequest({
@@ -409,33 +285,8 @@ const useAction = () => {
             action:"editPrivate"
         })
     } 
-    /*
-    const privatecanvas = () => {
-		setUrlRequest({
-			url:"/canvas",
-			request:{
-				"method":"POST",
-				"headers":{
-					"token":state.token
-				}
-			},
-			action:"privatecanvas"
-		})
-	}
-    const globalcanvas = () => {
-		setUrlRequest({
-			url:"/global",
-			request:{
-				"method":"POST",
-				"headers":{
-					"token":state.token
-				}
-			},
-			action:"globalcanvas"
-		})
-	} */
 
-	return {state,addItem,removeItem,editItem,register,login,logout,setError,getList,   getSquareList,addSquareGlobal,editGlobalSquare,editPrivateSquare}
+	return {state,register,login,logout,setError,   getSquareList,editGlobalSquare,editPrivateSquare}
 }
 
 export default useAction;

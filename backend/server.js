@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-//const shoppingRoute = require('./routes/shoppingroute');
 const canvasRoute = require('./routes/canvasroute');
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");

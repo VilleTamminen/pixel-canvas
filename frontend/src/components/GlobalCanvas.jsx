@@ -12,6 +12,7 @@ const GlobalCanvas = (props) => {
 
     window.onload = function() {
         squareFieldDiv = document.getElementById("SquareField"); //ei tarpeellinen
+        reloadSquares();
     }
 
 	const [state,setState] = useState({
@@ -25,12 +26,6 @@ const GlobalCanvas = (props) => {
             datetime:""
         }
 	})
-
-    //Counter for cooldown time of editing global squares
-    const [cooldownCounter, setCooldownCounter] = useState(utilityConstants.GlobalCanvasCooldown);
-    useEffect(() => {
-        cooldownCounter > 0 && setTimeout(() => setCooldownCounter(cooldownCounter - 1), 1000);
-    }, [cooldownCounter]);
     
 	const onChange = (event) => {
         setState((state) => {
@@ -61,20 +56,33 @@ const GlobalCanvas = (props) => {
 
     //Edit Global square
 	const editSquare = (newSquare) => { 
-        console.log("global square final: "+newSquare.id+" "+newSquare.username+" "+newSquare.coordX+" "+newSquare.coordY+" "+newSquare.datetime);
 		props.editSquare(newSquare);
         setCooldownCounter(utilityConstants.GlobalCanvasCooldown);
 		//changeMode("cancel");
 	}
+
+    //Counter for cooldown time of editing global squares
+    const [cooldownCounter, setCooldownCounter] = useState(utilityConstants.GlobalCanvasCooldown);
+    useEffect(() => {
+        cooldownCounter > 0 && setTimeout(() => setCooldownCounter(cooldownCounter - 1), 1000);
+    }, [cooldownCounter]);
+
+    //Counter for updating squareList
+    const [counter, setCounter] = useState(utilityConstants.GlobalCanvasUpdate);
+    useEffect(() => {
+        counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+        if(counter === 0){
+            reloadSquares();
+        }
+    }, [counter]);
 	function reloadSquares(){
-        console.log("reload. getting new squares..."); //debugging
         props.getSquareList();
+        setCounter(utilityConstants.GlobalCanvasUpdate)
     }
 
     //Squaret ovat sekaisin, ne täytyy saada id:n mukaan sommiteltua tai coordinaattien mukaan oikeisiin kohtiin?
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#sorting_with_map 
     squares = props.squareList.sort((a, b) => a.id > b.id );
-
 	squares = squares.map((square,index) => {
         //Lisää rivinvaihto 
         //poistettu Square changeMode={changeMode} index={index}
@@ -108,7 +116,6 @@ const GlobalCanvas = (props) => {
     }
     function selectSquareWithId(squareId){
         //Select square so that EditSquare can use it
-        //kun on saatu square niin EditSquare key={square._id} voidaan laittaa takaisin
         let tempSquares = props.squareList.sort((a, b) => a.id > b.id );
        // console.log("global canvas select square id: " +tempSquares[squareId-1].id + "  coordX: " +tempSquares[squareId-1].coordX) //debugging
         setState((state) => {
