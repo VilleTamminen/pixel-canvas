@@ -253,27 +253,27 @@ const Canvas = (props) => {
         <>
         <tr>Selected square id: {state.selectedSquareId}</tr>
         <tr>
-            <td><button className="btn btn-success" background-color="#FF0000" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#FF0000" style={{marginLeft:10}}
                 onClick={() => editSquare("#FF0000")}>Red</button></td>
-            <td><button className="btn btn-success" background-color="#FFA500" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#FFA500" style={{marginLeft:10}}
                 onClick={() => editSquare("#FFA500")}>Orange</button></td>
-            <td><button className="btn btn-success" background-color="#FFFF00" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#FFFF00" style={{marginLeft:10}}
                 onClick={() => editSquare("#FFFF00")}>Yellow</button></td>
-            <td><button className="btn btn-success" background-color="#04AA6D" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#04AA6D" style={{marginLeft:10}}
                 onClick={() => editSquare("#04AA6D")}>Green</button></td>
-            <td><button className="btn btn-success" background-color="#0000FF" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#0000FF" style={{marginLeft:10}}
                 onClick={() => editSquare("#0000FF")}>Blue</button></td>
-            <td><button className="btn btn-success" background-color="#A020F0" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#A020F0" style={{marginLeft:10}}
                 onClick={() => editSquare("#A020F0")}>Purple</button></td>
-            <td><button className="btn btn-success" background-color="#FFFFFF" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#FFFFFF" style={{marginLeft:10}}
                 onClick={() => editSquare("#FFFFFF")}>White</button></td>
-            <td><button className="btn btn-success" background-color="#808080" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#808080" style={{marginLeft:10}}
                 onClick={() => editSquare("#808080")}>Grey</button></td>
-            <td><button className="btn btn-success" background-color="#000000" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" background-color="#000000" style={{marginLeft:10}}
                 onClick={() => editSquare("#000000")}>Black</button></td>
         </tr>
         <tr>
-        <td><button className="btn btn-success" background-color="#FF0000" style={{marginLeft:10}}
+        <td><button className="btn btn-danger" background-color="#FF0000" style={{marginLeft:10}}
                 onClick={() => createCanvas()}>Clear the canvas</button></td>
         </tr>
         <div id="SquareField" onClick={mouseClick}>

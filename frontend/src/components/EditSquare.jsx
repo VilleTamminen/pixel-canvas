@@ -42,7 +42,6 @@ const EditSquare = (props) => {
                     + currentdate.getHours() + ":"  
                     + currentdate.getMinutes() + ":" 
                     + currentdate.getSeconds();
-            console.log("datetime:"+datetimenow);         //datetime:Last Sync: 1/4/2024 @ 20:49:43 
             tempSquare = {
                 ...state.square,
                 color:newcolor,

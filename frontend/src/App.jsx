@@ -5,6 +5,7 @@ import {Routes,Route,Navigate} from 'react-router-dom';
 import GlobalCanvas from  "./components/GlobalCanvas";
 import Canvas from  "./components/Canvas";
 import HomePage from "./components/HomePage";
+import DeleteUserPage from "./components/DeleteUserPage";
 
 //Kopio react/50_shopping_app/02_stage_login
 //frontend: npm install react
@@ -13,7 +14,7 @@ import HomePage from "./components/HomePage";
 function App() {
 
 	//const {state,addItem,removeItem,editItem,register,login,logout,setError,getList} = useAction();
-    const {state,register,login,logout,setError,    getSquareList,editGlobalSquare,editPrivateSquare} = useAction();
+    const {state,register,login,logout,setError,deleteUser,getSquareList,editGlobalSquare,editPrivateSquare} = useAction();
 
 	let message = <></>
 	if(state.loading) {
@@ -34,6 +35,7 @@ function App() {
 					<Route path="/" element={<HomePage />}/>
                     <Route path="/global" element={<GlobalCanvas squareList={state.squareList} getSquareList={getSquareList} editSquare={editGlobalSquare} />}/>
                     <Route path="/canvas" element={<Canvas />}/>
+                    <Route path="/deleteUser" element={<DeleteUserPage deleteUser={deleteUser}/>}/>
 					<Route path="*" element={<Navigate to="/"/>}/>
 				</Routes>
 			</>

@@ -123,6 +123,9 @@ const useAction = () => {
 					case "logout":
 						clearState("");
 						return;
+                    case "deleteUser":   
+                        clearState("");              
+                        return;
                     case "getSquareList":
                         const squareData = await response.json();
 						if(!squareData) {
@@ -170,6 +173,9 @@ const useAction = () => {
 					case "logout":
 						clearState("Server responded with an error. Logging you out.");
 						return;
+                    case "deleteUser":
+                        clearState("Server responded with an error. Logging you out.");
+                        return;
                     case "getSquareList":
                         setError("Failed to get square list."+errorMessage);
                         return;
@@ -233,6 +239,18 @@ const useAction = () => {
 		})
 	}
 
+    const deleteUser = () => {
+        setUrlRequest({
+			url:"/deleteUser",
+			request:{
+				"method":"DELETE",
+				"headers":{
+					"token":state.token
+				}
+			},
+			action:"logout" //deleteUser = no function for deleting on client side.
+		})
+    }
     // CANVAS STUFF
 
     const getSquareList = (token) => {
@@ -286,7 +304,7 @@ const useAction = () => {
         })
     } 
 
-	return {state,register,login,logout,setError,   getSquareList,editGlobalSquare,editPrivateSquare}
+	return {state,register,login,logout,setError,deleteUser,getSquareList,editGlobalSquare,editPrivateSquare}
 }
 
 export default useAction;
