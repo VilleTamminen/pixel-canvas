@@ -9,8 +9,8 @@ const NavBar = (props) => {
     */
     if(props.isLogged){
         return (
-            <nav className='navbar navbar-expand-lg navbar-light bg-light'>
-                <p className='navbar-brand' style={{marginLeft:10}}>Canvas App</p>
+            <nav className='navbar navbar-expand-lg navbar-light bg-light' style={{backgroundColor:"#86adeb", listStyle:"none"}}>
+                <p className='navbar-brand' style={{marginLeft:10}}>Pixel Canvas App</p>
                 <ul className='navbar-nav'>
                     <li className='nav-item' style={{marginLeft:10}}>
                         <Link to="/" className='nav-link'>Home page</Link>
@@ -34,7 +34,7 @@ const NavBar = (props) => {
     else {
         return (
             <nav className='navbar navbar-expand-lg navbar-light bg-light'>
-                <p className='navbar-brand' style={{marginLeft:10}}>Canvas App</p>
+                <p className='navbar-brand' style={{marginLeft:10}}>Pixel Canvas App</p>
             </nav>
         )
     }

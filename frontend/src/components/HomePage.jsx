@@ -1,21 +1,7 @@
-import { useState } from "react";
+import {Link} from 'react-router-dom';
 
 const HomePage = (props) => {
-    /*
-    const [state,setState] = useState({
-        username:"",
-        password:""
-    })
-
-    const onChange = (event) => {
-        setState((state) => {
-            return {
-                ...state,
-                [event.target.name]:event.target.value
-            }
-        })
-    } */
-
+    
     const onSubmit = (event) => {
         event.preventDefault();
 
@@ -34,9 +20,19 @@ const HomePage = (props) => {
             textAlign:"center"
         }}>
             <div>
-                <h2>Home Page</h2>
-                <button name="privatecanvas" onClick={onSubmit} className="btn btn-secondary" style={{marginRight:5}}>Private canvas</button>
-                <button name="globalcanvas" onClick={onSubmit} className="btn btn-secondary" style={{marginRight:5}}>Global canvas</button>
+                <h2>Welcome to pixel canvas</h2>
+                <br/>
+                <button className="btn btn-secondary" style={{marginRight:"10px"}}>
+                    <li className='nav-item' style={{listStyle:"none"}}>
+                        <Link to="/global" className='nav-link'>Global canvas</Link>
+                    </li>  
+                </button>
+                <button className="btn btn-secondary"style={{marginLeft:"10px"}}>
+                    <li className='nav-item' style={{listStyle:"none"}}>
+                        <Link to="/canvas" className='nav-link'>Local storage canvas</Link>
+                    </li>  
+                </button>
+                <br/><br/><br/>
             </div>
         </div>
     )

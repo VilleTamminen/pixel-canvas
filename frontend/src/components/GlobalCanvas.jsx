@@ -2,7 +2,9 @@ import {useState, useEffect} from 'react';
 import EditSquare from './EditSquare';
 import Square from './Square';
 import React from 'react';
+import Grid from './Grid';
 import * as utilityConstants from './utilityConstants';
+
 
 //alustana ShoppingList
 const GlobalCanvas = (props) => {
@@ -143,12 +145,12 @@ const GlobalCanvas = (props) => {
         }    
         let xInElement = e.clientX - squareFieldDiv.left; //x position within the SquareField div element.
         let yInElement = e.clientY - squareFieldDiv.top;  //y position within the SquareField div element.
-        //Jos klikattiin ruutujen ohi niin ignore
-        if(xInElement > utilityConstants.GlobalCanvasSquareSize * utilityConstants.GlobalCanvasSquareRowSize){
+        //Jos klikattiin ruutujen ohi niin ignore. jos on yhtä suuri niin silloinkin on mennyt ohi!!!
+        if(xInElement >= utilityConstants.GlobalCanvasSquareSize * utilityConstants.GlobalCanvasSquareRowSize){
             console.log("You didn't click square.");
         }
         else {
-           // console.log("x: " + xInElement + "  y: " + yInElement + + " || clientX "+ e.clientX + " clientY: "+e.clientY+" || div.left: "+squareFieldDiv.left+ " div.top: "+squareFieldDiv.top ); //debugging
+           // console.log("x: " + xInElement + "  y: " + yInElement + " || clientX "+ e.clientX + " clientY: "+e.clientY+" || div.left: "+squareFieldDiv.left+ " div.top: "+squareFieldDiv.top ); //debugging
             //Do math to find corner coordinates of the square
             let x = roundX(xInElement, utilityConstants.GlobalCanvasSquareSize);
             let y = roundX(yInElement, utilityConstants.GlobalCanvasSquareSize);
@@ -165,6 +167,7 @@ const GlobalCanvas = (props) => {
             <EditSquare key={state.square._id} square={state.square} cooldownCounter={cooldownCounter} changeMode={changeMode} editSquare={editSquare} />
             <div>Cooldown: {cooldownCounter}</div>
             <div id='SquareFieldDiv' onClick={mouseClick} >
+                <Grid height={utilityConstants.GlobalCanvasSquareRowSize * utilityConstants.GlobalCanvasSquareSize} width={utilityConstants.GlobalCanvasSquareRowSize * utilityConstants.GlobalCanvasSquareSize}/>
                 {squares}
             </div>
         </>

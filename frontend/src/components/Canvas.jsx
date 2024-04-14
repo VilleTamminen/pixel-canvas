@@ -1,8 +1,9 @@
 import {useState, useEffect} from 'react';
-import EditSquare from './EditSquare';
+//import EditSquare from './EditSquare'; //edit square has some nonrelevant stuff
 import PrivateSquare from './PrivateSquare';
 import React from 'react';
 import * as utilityConstants from './utilityConstants';
+import Grid from './Grid';
 
 // localStorage: https://github.com/Wantonius/OKKS2024K/tree/main/javascript/06_web_storage/public 
 //Private canvas. Because this local storage, if another user uses same computer they can see same storage.
@@ -226,6 +227,7 @@ const Canvas = (props) => {
     }
     const mouseClick = (e) => {
         // e = Mouse click event.
+        console.log("event current target id: "+e.currentTarget.id); //debugging
         let squareFieldDiv = e.currentTarget.getBoundingClientRect();
         if(!e.currentTarget){
             squareFieldDiv = e.getBoundingClientRect();
@@ -234,10 +236,11 @@ const Canvas = (props) => {
         let xInElement = e.clientX - squareFieldDiv.left; //x position within the SquareField div element.
         let yInElement = e.clientY - squareFieldDiv.top;  //y position within the SquareField div element.
         //Jos klikattiin ruutujen ohi niin ignore
-        if(xInElement > utilityConstants.PrivateCanvasSquareSize * utilityConstants.PrivateCanvasSquareRowSize){
+        if(xInElement >= utilityConstants.PrivateCanvasSquareSize * utilityConstants.PrivateCanvasSquareRowSize){
             console.log("You didn't click square.");
         }
         else {
+            //console.log("x: " + xInElement + "  y: " + yInElement + " -- clientX "+ e.clientX + " clientY: "+e.clientY+" -- div.left: "+squareFieldDiv.left+ " div.top: "+squareFieldDiv.top ); //debugging          
              //Do math to find corner coordinates of the square
             let x = roundX(xInElement, utilityConstants.PrivateCanvasSquareSize);
             let y = roundX(yInElement, utilityConstants.PrivateCanvasSquareSize);
@@ -253,30 +256,32 @@ const Canvas = (props) => {
         <>
         <tr>Selected square id: {state.selectedSquareId}</tr>
         <tr>
-            <td><button className="btn btn-secondary" background-color="#FF0000" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#FF0000", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#FF0000")}>Red</button></td>
-            <td><button className="btn btn-secondary" background-color="#FFA500" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#FFA500", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#FFA500")}>Orange</button></td>
-            <td><button className="btn btn-secondary" background-color="#FFFF00" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#FFFF00", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#FFFF00")}>Yellow</button></td>
-            <td><button className="btn btn-secondary" background-color="#04AA6D" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#04AA6D", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#04AA6D")}>Green</button></td>
-            <td><button className="btn btn-secondary" background-color="#0000FF" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#0000FF", color:"white", marginLeft:10}}
                 onClick={() => editSquare("#0000FF")}>Blue</button></td>
-            <td><button className="btn btn-secondary" background-color="#A020F0" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#A020F0", color:"white", marginLeft:10}}
                 onClick={() => editSquare("#A020F0")}>Purple</button></td>
-            <td><button className="btn btn-secondary" background-color="#FFFFFF" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#FFFFFF", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#FFFFFF")}>White</button></td>
-            <td><button className="btn btn-secondary" background-color="#808080" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#808080", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#808080")}>Grey</button></td>
-            <td><button className="btn btn-secondary" background-color="#000000" style={{marginLeft:10}}
+            <td><button className="btn btn-secondary" style={{backgroundColor:"#000000", color:"white", marginLeft:10}}
                 onClick={() => editSquare("#000000")}>Black</button></td>
         </tr>
         <tr>
         <td><button className="btn btn-danger" background-color="#FF0000" style={{marginLeft:10}}
                 onClick={() => createCanvas()}>Clear the canvas</button></td>
         </tr>
-        <div id="SquareField" onClick={mouseClick}>
+
+        <div id="SquareField" onClick={mouseClick} >
+            <Grid height={utilityConstants.PrivateCanvasSquareRowSize * utilityConstants.PrivateCanvasSquareSize} width={utilityConstants.PrivateCanvasSquareRowSize * utilityConstants.PrivateCanvasSquareSize}/>
             {privateSquares}
         </div>
         </>

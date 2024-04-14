@@ -23,6 +23,9 @@ const url = "mongodb+srv://"+mongo_user+":"+mongo_password+"@"+mongo_url+
 "/place?retryWrites=true&w=majority&appName=TestiKlusteri";
 //Tietokantaan tulee place niminen namespace
 
+//Cyclic.sh app hosting tarvii tätä
+//app.use("/",express.static("public"));
+
 mongoose.connect(url).then(
 	() => console.log("Connected to MongoDB"),
 	(err) => console.log("Failed to connect to MongoDB. Reason ",err)

@@ -23,14 +23,17 @@ function App() {
 	if(state.error) {
 		message = <h4>{state.error}</h4>
 	}
-    //Jos on logged in, näytä Canvas. Muuten näytä LoginPage.
+    //Jos on logged in, näytä Canvas. Muuten näytä LoginPage. älä näytä message
+    /*
+        <div style={{height:25,textAlign:"center"}}>
+            {message}
+        </div>
+    */
     if(state.isLogged) {
 		return (
 			<>
 				<Navbar logout={logout} isLogged={state.isLogged} user={state.user}/>
-				<div style={{height:25,textAlign:"center"}}>
-					{message}
-				</div>
+
 				<Routes>
 					<Route path="/" element={<HomePage />}/>
                     <Route path="/global" element={<GlobalCanvas squareList={state.squareList} getSquareList={getSquareList} editSquare={editGlobalSquare} />}/>
