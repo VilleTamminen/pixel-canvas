@@ -57,11 +57,11 @@ const EditSquare = (props) => {
         } 
     }
 
+    //colSPan={"9"} kertoo että 9 riviä on käytössä, jotta rivitys toimii oikein.
     return (
         <>
-        <tr>Colored by user: {state.square.username}</tr> 
-        <tr>Last edit: {state.square.datetime}</tr> 
-        <tr style={{height:"30px"}}/>
+        <tr><td colSpan={"9"}>Colored by user: {state.square.username}</td></tr> 
+        <tr><td colSpan={"9"}>Last edit: {state.square.datetime}</td></tr> 
         <tr>
             <td><button className="btn btn-success" style={{backgroundColor:"#FF0000", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#FF0000")}>Red</button></td>

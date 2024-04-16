@@ -1,3 +1,4 @@
+//Ei tee mitään koska ei voi poistaa käyttäjää clientin puolelta!
 
 const DeleteUserPage = (props) => {
 

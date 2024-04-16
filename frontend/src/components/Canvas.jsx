@@ -5,11 +5,10 @@ import React from 'react';
 import * as utilityConstants from './utilityConstants';
 import Grid from './Grid';
 
-// localStorage: https://github.com/Wantonius/OKKS2024K/tree/main/javascript/06_web_storage/public 
-//Private canvas. Because this local storage, if another user uses same computer they can see same storage.
+//Private canvas that saves to local storage.
 const Canvas = (props) => {
 
-    let starterSquares = '[{"id":1,"color":"#00ff55"},{"id":2,"color":"#808080"},{"id":3,"color":"#c2c2c2"},{"id":4,"color":"#808080"},{"id":5,"color":"#c2c2c2"},{"id":6,"color":"#808080"},{"id":7,"color":"#c2c2c2"},{"id":8,"color":"#808080"},{"id":9,"color":"#c2c2c2"},{"id":10,"color":"#00ff55"}]';
+   // let starterSquares = '[{"id":1,"color":"#00ff55"},{"id":2,"color":"#808080"},{"id":3,"color":"#c2c2c2"},{"id":4,"color":"#808080"},{"id":5,"color":"#c2c2c2"},{"id":6,"color":"#808080"},{"id":7,"color":"#c2c2c2"},{"id":8,"color":"#808080"},{"id":9,"color":"#c2c2c2"},{"id":10,"color":"#00ff55"}]';
     let privateSquares; //used to map react components
     let privateSquaresList; //used to store square info to local storage
 
@@ -49,12 +48,7 @@ const Canvas = (props) => {
     }
 
 	const [state,setState] = useState({
-        test:0,
         selectedSquareId:1,
-        square:{
-            id:0,
-            color:"#FFFFFF"
-        },
         list:[]
 	})
     useEffect(() => {
@@ -103,8 +97,9 @@ const Canvas = (props) => {
                 )
             })
             setState({
+                selectedSquareId:id,
                 list:privateSquaresList
-            })
+            }) 
         }
         else{
             console.log("select a square");
@@ -150,11 +145,6 @@ const Canvas = (props) => {
         setState({
             list:privateSquaresList
         })
-    }
-
-    const clearCanvas = () => {
-        //Turn all squares to white/grey
-        createCanvas();
     }
 
     if(!privateSquaresList){
@@ -251,10 +241,11 @@ const Canvas = (props) => {
     };
 
     /* target is the element that triggered the event (e.g., the user clicked on)
-    currentTarget is the element that the event listener is attached to   */
+    currentTarget is the element that the event listener is attached to   
+    colSPan={"9"} kertoo että 9 riviä on käytössä, jotta rivitys toimii oikein.*/
 	return(
         <>
-        <tr>Selected square id: {state.selectedSquareId}</tr>
+        <tr><td colSpan={"9"}>Selected square id: {state.selectedSquareId}</td></tr>
         <tr>
             <td><button className="btn btn-secondary" style={{backgroundColor:"#FF0000", color:"black", marginLeft:10}}
                 onClick={() => editSquare("#FF0000")}>Red</button></td>
@@ -276,7 +267,7 @@ const Canvas = (props) => {
                 onClick={() => editSquare("#000000")}>Black</button></td>
         </tr>
         <tr>
-        <td><button className="btn btn-danger" background-color="#FF0000" style={{marginLeft:10}}
+            <td colSpan={"9"}><button className="btn btn-danger" background-color="#FF0000" style={{marginLeft:10}}
                 onClick={() => createCanvas()}>Clear the canvas</button></td>
         </tr>
 
